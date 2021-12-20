@@ -1,0 +1,114 @@
+create table customer (
+	email_address varchar(40),
+	password varchar(16),
+	first_name varchar(20),
+	last_name varchar(20),
+	address varchar(50),
+	phone_number numeric(10),
+	primary key (email_address)
+);
+
+create table order_tracker (
+	day numeric(2),
+	month numeric(2),
+	year numeric(4),
+	location varchar(50),
+	primary key (day, month, year)
+);
+
+create table book_order (
+	order_number numeric(10),
+	shipping_address varchar(50),
+	billing_address varchar(50),
+	day numeric(2),
+	month numeric(2),
+	year numeric(4),
+	primary key (order_number),
+	foreign key (day, month, year) references order_tracker
+);
+
+create table places (
+	order_number numeric(10),
+	email_address varchar(40),
+	primary key (order_number),
+	foreign key (order_number) references book_order
+);
+
+create table book_info (
+	book_name varchar(40),
+	page_count numeric(4),
+	price numeric(5, 2),
+	primary key (book_name)
+);
+
+create table book_author (
+	isbn numeric(13),
+	author varchar(30),
+	primary key (isbn)
+);
+
+create table book_genre (
+	isbn numeric(13),
+	genre varchar(10),
+	primary key (isbn)
+);
+
+create table book (
+	isbn numeric(13),
+	book_name varchar(40),
+	primary key (isbn),
+	foreign key (book_name) references book_info,
+	foreign key (isbn) references book_author,
+	foreign key (isbn) references book_genre
+);
+
+create table contains (
+	order_number numeric(10),
+	isbn numeric(13),
+	quantity numeric(3),
+	primary key (order_number, isbn, quantity),
+	foreign key (order_number) references book_order,
+	foreign key (isbn) references book
+);
+
+create table owns (
+	isbn numeric(13),
+	email_address varchar(40),
+	commission numeric(2,2),
+	primary key (isbn, email_address, commission),
+	foreign key (isbn) references book
+);
+
+create table banking_info (
+	banking_account varchar(40),
+	address varchar(50),
+	phone_number numeric(10),
+	primary key (banking_account)
+);
+
+create table publisher (
+	email_address varchar(40),
+	first_name varchar(20),
+	last_name varchar(20),
+	banking_account varchar(40),
+	primary key (email_address),
+	foreign key (banking_account) references banking_info
+);
+
+create table manages (
+	email_address varchar(40),
+	isbn numeric(13),
+	primary key (email_address, isbn),
+	foreign key (isbn) references book
+);
+
+create table manager (
+	email_address varchar(40),
+	password varchar(16),
+	first_name varchar(20),
+	last_name varchar(20),
+	address varchar(50),
+	phone_number numeric(10),
+	primary key (email_address)
+);
+
